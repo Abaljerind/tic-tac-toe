@@ -31,10 +31,7 @@ function calculateWinner(squares) {
   return null;
 }
 
-export default function Board() {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
+function Board({ xIsNext, squares, onPlay }) {
   function handleClick(i) {
     // memeriksa apakah squares sudah punya isi X atau O dan juga memeriksa apakah pemain telah menang
     if (squares[i] || calculateWinner(squares)) {
@@ -48,10 +45,7 @@ export default function Board() {
     xIsNext ? (nextSquares[i] = "X") : (nextSquares[i] = "O");
 
     // set data squares dengan isinya dari nextSquares, array baru yang dibuat dengan method slice()
-    setSquares(nextSquares);
-
-    // set data xIsNext bernilai false
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   }
 
   // untuk hasil pemenang dari function calculateWinner
@@ -83,5 +77,32 @@ export default function Board() {
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
     </>
+  );
+}
+
+export default function Game() {
+  // tambah useState untuk melacak giliran pemain dan riwayat gerakannya
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+
+  // membuat variable untuk membaca array kotak terakhir dari history
+  const currentSquares = history[history.length - 1];
+
+  // function dibawah akan dipanggil oleh komponen Board untuk memperbaharui permainan
+  function handlePlay(nextSquares) {
+    setHistory([...history, nextSquares]);
+    setXIsNext(!xIsNext);
+  }
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+
+      <div className="game-info">
+        <ol>{/* TODO */}</ol>
+      </div>
+    </div>
   );
 }
