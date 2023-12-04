@@ -94,6 +94,28 @@ export default function Game() {
     setXIsNext(!xIsNext);
   }
 
+  // membuat function jumpTo()
+  function jumpTo(nextMove) {
+    // TODO
+  }
+
+  // membuat array baru dengan method map yang berisi arrow function dengan 2 parameter
+  const moves = history.map((squares, move) => {
+    let description;
+
+    // jika move lebih dari 0 maka pergi ke langkah sekian, jika tidak pergi ke awal permainan
+    move > 0
+      ? (description = "Pergi ke langkah #" + move)
+      : (description = "Pergi ke awal permainan");
+
+    // mengembalikan tag li yg didalamnya ada tag button dengan variable description
+    return (
+      <li>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+
   return (
     <div className="game">
       <div className="game-board">
@@ -101,7 +123,7 @@ export default function Game() {
       </div>
 
       <div className="game-info">
-        <ol>{/* TODO */}</ol>
+        <ol>{moves}</ol>
       </div>
     </div>
   );
