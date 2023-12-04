@@ -81,10 +81,11 @@ function Board({ xIsNext, squares, onPlay }) {
 }
 
 export default function Game() {
-  // tambah useState untuk melacak giliran pemain dan riwayat gerakannya
-  const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+
+  // membuat variable xIsNext dengan value, jika sisa bagi currentMove 0 jadi true (genap), jika sisa bagi 1 (ganjil) maka xIsNext bernilai false
+  const xIsNext = currentMove % 2 === 0;
 
   // membuat variable untuk membaca array kotak terakhir dari history
   const currentSquares = history[currentMove];
@@ -99,18 +100,12 @@ export default function Game() {
 
     // mengeset currentMove dengan panjang nextHistory - 1
     setCurrentMove(nextHistory.length - 1);
-
-    // mengeset xIsNext dengan value kebalikannya saat ini, yaitu false karna diambil dari nilai default di useState
-    setXIsNext(!xIsNext);
   }
 
   // membuat function jumpTo()
   function jumpTo(nextMove) {
     // mengeset currentMove dengan value nextMove yang diisi dengan move dari hasil method map
     setCurrentMove(nextMove);
-
-    // mengeset nilai xIsNext jika sisa bagi nextMove 0 jadi true, jika sisa bagi 1 maka xIsNext bernilai false
-    setXIsNext(nextMove % 2 === 0);
   }
 
   // membuat array baru dengan method map yang berisi arrow function dengan 2 parameter
