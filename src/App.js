@@ -84,19 +84,33 @@ export default function Game() {
   // tambah useState untuk melacak giliran pemain dan riwayat gerakannya
   const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
 
   // membuat variable untuk membaca array kotak terakhir dari history
-  const currentSquares = history[history.length - 1];
+  const currentSquares = history[currentMove];
 
   // function dibawah akan dipanggil oleh komponen Board untuk memperbaharui permainan
   function handlePlay(nextSquares) {
-    setHistory([...history, nextSquares]);
+    // membuat variable nextHistory yang berisi data history yg di slice dari indeks 0 sampai currentMove + 1, dan ada nilai nextSquares
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+
+    // mengeset history dengan isi dari nextHistory
+    setHistory(nextHistory);
+
+    // mengeset currentMove dengan panjang nextHistory - 1
+    setCurrentMove(nextHistory.length - 1);
+
+    // mengeset xIsNext dengan value kebalikannya saat ini, yaitu false karna diambil dari nilai default di useState
     setXIsNext(!xIsNext);
   }
 
   // membuat function jumpTo()
   function jumpTo(nextMove) {
-    // TODO
+    // mengeset currentMove dengan value nextMove yang diisi dengan move dari hasil method map
+    setCurrentMove(nextMove);
+
+    // mengeset nilai xIsNext jika sisa bagi nextMove 0 jadi true, jika sisa bagi 1 maka xIsNext bernilai false
+    setXIsNext(nextMove % 2 === 0);
   }
 
   // membuat array baru dengan method map yang berisi arrow function dengan 2 parameter
@@ -110,7 +124,8 @@ export default function Game() {
 
     // mengembalikan tag li yg didalamnya ada tag button dengan variable description
     return (
-      <li>
+      // perlu menggunakan key yang berisi move untuk memberitahu react tentang identitas setiap komponen agar react mempertahankan state diantara render ulang.
+      <li key={move}>
         <button onClick={() => jumpTo(move)}>{description}</button>
       </li>
     );
