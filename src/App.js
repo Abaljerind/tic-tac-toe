@@ -9,13 +9,35 @@ function Square({ value, onSquareClick }) {
   );
 }
 
+// function untuk menentukan pemenangnya
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
+
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
-    // memeriksa apakah squares sudah punya isi X atau O
-    if (squares[i]) {
+    // memeriksa apakah squares sudah punya isi X atau O dan juga memeriksa apakah pemain telah menang
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
 
@@ -32,8 +54,19 @@ export default function Board() {
     setXIsNext(!xIsNext);
   }
 
+  // untuk hasil pemenang dari function calculateWinner
+  const winner = calculateWinner(squares);
+  let status;
+  // mengecek siapa pemenangnya, jika belum ada pemenang maka akan tampil status giliran pemain siapa saat ini.
+  winner
+    ? (status = "Pemenang: " + winner)
+    : (status = "Pemain selanjutnya: " + (xIsNext ? "X" : "O"));
+
   return (
     <>
+      {/* untuk menampilkan variable status */}
+      <div className="status">{status}</div>
+
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
