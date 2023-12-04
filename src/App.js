@@ -19,9 +19,16 @@ export default function Board() {
       return;
     }
 
+    // membuat array baru dgn method slice()
     const nextSquares = squares.slice();
+
+    // memeriksa apakah xIsNet bernilai true, jika iya maka isi nextSquares X, dan jika tidak isinya O
     xIsNext ? (nextSquares[i] = "X") : (nextSquares[i] = "O");
+
+    // set data squares dengan isinya dari nextSquares, array baru yang dibuat dengan method slice()
     setSquares(nextSquares);
+
+    // set data xIsNext bernilai false
     setXIsNext(!xIsNext);
   }
 
